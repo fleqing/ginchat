@@ -1,8 +1,6 @@
 package router
 
 import (
-	"ginchat/service"
-
 	"github.com/gin-gonic/gin"
 
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -10,6 +8,7 @@ import (
 	swaggerfiles "github.com/swaggo/files"
 
 	docs "ginchat/docs"
+	"ginchat/service"
 )
 
 func Router() *gin.Engine {
@@ -43,5 +42,6 @@ func Router() *gin.Engine {
 	// 发送消息
 	r.GET("/user/sendMsg", service.SendMsg)
 	r.GET("/user/sendUserMsg", service.SendUserMsg)
+	r.POST("/attach/upload", service.Upload)
 	return r
 }
