@@ -79,7 +79,6 @@ func Chat(writer http.ResponseWriter, request *http.Request) {
 	sendMsg(userId, []byte("欢迎进入聊天系统"))
 }
 
-// 从 Node 的 DataQueue 中读取数据，并将这些数据通过 WebSocket 连接发送出去
 // 从 node.DataQueue 中读取数据，并将数据作为WebSocket消息发送出去
 func sendProc(node *Node) {
 	for {
