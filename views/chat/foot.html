@@ -173,6 +173,7 @@
                         "video/webm\;codecs=daala",
                         "video/webm\;codecs=h264",
                         "audio/webm\;codecs=opus",
+                        "audio/aac",
                         "video/mpeg"];
                     var suporttype = "";
                     for (var i in types) {
@@ -180,6 +181,11 @@
                             suporttype = types[i];
                         }
                     }
+                    if (!window.MediaRecorder) {
+                        mui.toast("浏览器不支持 MediaRecorder API");
+                        return;
+                    }
+
                     if (!suporttype) {
                         mui.toast("编码不支持")
                         return;
