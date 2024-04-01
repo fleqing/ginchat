@@ -29,3 +29,45 @@ func SearchFrend(userId uint) []UserBasic {
 	utils.DB.Where("id in (?)", objIds).Find(&users)
 	return users
 }
+
+func AddFriend(userId uint, targetName string) (int, string) {
+	user := FindUserByName(targetName)
+	if user.Identity != "" {
+
+		if userId == user.ID {
+			return -1, "不能添加自己为好友"
+		}
+		contact0 := Contact{}
+		utils.DB.Where("owner_id = ? and target_id = ? and type = 1", userId, user.ID).First(&contact0)
+		if contact0.ID != 0 {
+			return -1, "已经是好友"
+		}
+		tx := utils.DB.Begin()
+		defer func() {
+			if r := recover(); r != nil {
+				tx.Rollback()
+			}
+		}()
+		contact := Contact{
+			OwnerId:  userId,
+			TargetId: user.ID,
+			Type:     1,
+		}
+		if err := utils.DB.Create(&contact).Error; err != nil {
+			tx.Rollback()
+			return -1, "添加好友失败"
+		}
+		contact2 := Contact{
+			OwnerId:  user.ID,
+			TargetId: userId,
+			Type:     1,
+		}
+		if err := utils.DB.Create(&contact2).Error; err != nil {
+			tx.Rollback()
+			return -1, "添加好友失败"
+		}
+		tx.Commit()
+		return 0, "添加好友成功"
+	}
+	return -1, "用户不存在"
+}
