@@ -271,3 +271,20 @@ func CreateCommunity(c *gin.Context) {
 		utils.RespFail(c.Writer, msg)
 	}
 }
+
+func LoadCommunity(c *gin.Context) {
+	userId, _ := strconv.Atoi(c.Request.FormValue("ownerId"))
+	community := models.LoadCommunity(uint(userId))
+	utils.RespOKList(c.Writer, community, len(community))
+}
+
+func JoinGroup(c *gin.Context) {
+	userId, _ := strconv.Atoi(c.Request.FormValue("userId"))
+	communityId := c.Request.FormValue("comId")
+	flag, msg := models.JoinGroup(uint(userId), communityId)
+	if flag == 0 {
+		utils.RespOk(c.Writer, flag, msg)
+	} else {
+		utils.RespFail(c.Writer, msg)
+	}
+}
