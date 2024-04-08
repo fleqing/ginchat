@@ -71,3 +71,13 @@ func AddFriend(userId uint, targetName string) (int, string) {
 	}
 	return -1, "用户不存在"
 }
+
+func SearchUserByGroupId(groupId uint) []uint {
+	contacts := make([]Contact, 0)
+	objIds := make([]uint, 0)
+	utils.DB.Where("target_id = ? and type = 2", groupId).Find(&contacts)
+	for _, v := range contacts {
+		objIds = append(objIds, v.OwnerId)
+	}
+	return objIds
+}

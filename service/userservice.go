@@ -288,3 +288,13 @@ func JoinGroup(c *gin.Context) {
 		utils.RespFail(c.Writer, msg)
 	}
 }
+
+func RedisMsg(c *gin.Context) {
+	userIdA, _ := strconv.Atoi(c.Request.FormValue("userIdA"))
+	userIdB, _ := strconv.Atoi(c.Request.FormValue("userIdB"))
+	start, _ := strconv.ParseInt(c.Request.FormValue("start"), 10, 64)
+	end, _ := strconv.ParseInt(c.Request.FormValue("end"), 10, 64)
+	isRev, _ := strconv.ParseBool(c.Request.FormValue("isRev"))
+	msgs := models.RedisMsg(int64(userIdA), int64(userIdB), start, end, isRev)
+	utils.RespOKList(c.Writer, "ok", msgs)
+}
