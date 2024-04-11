@@ -15,6 +15,12 @@ import (
 	"gorm.io/gorm/logger"
 )
 
+func init() {
+	InitConfig()
+	InitMysql()
+	InitRedis()
+}
+
 func InitConfig() {
 	//TODO
 	viper.SetConfigName("app")

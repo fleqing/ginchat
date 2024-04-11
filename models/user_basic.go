@@ -9,6 +9,12 @@ import (
 	"gorm.io/gorm"
 )
 
+/*
+*
+`gorm:"default:CURRENT_TIMESTAMP”`
+`gorm:"column:login_out_time;default:CURRENT_TIMESTAMP" json:"login_out_time"`
+*
+*/
 type UserBasic struct {
 	gorm.Model
 	Name         string
@@ -19,11 +25,12 @@ type UserBasic struct {
 	ClientIp     string
 	ClientPort   string
 	Salt         string
-	LoginTime    time.Time `gorm:"default:CURRENT_TIMESTAMP"`
-	HearBeatTime time.Time `gorm:"default:CURRENT_TIMESTAMP"`
-	LoginOutTime time.Time `gorm:"column:login_out_time;default:CURRENT_TIMESTAMP" json:"login_out_time"`
+	LoginTime    time.Time
+	HearBeatTime time.Time
+	LoginOutTime time.Time
 	IsLogout     bool
 	DeviceInfo   string
+	Icon         string
 }
 
 func (table *UserBasic) TableName() string {
@@ -77,7 +84,7 @@ func DeleteUser(user UserBasic) *gorm.DB {
 // 不能直接使用 utils.DB.Updates(UserBasic{Name: user.Name, PassWord: user.PassWord})
 // 这样的方式来更新数据。因为在这种情况下，GORM 不知道你想要更新哪个表和哪个记录。
 func UpdateUser(user UserBasic) *gorm.DB {
-	return utils.DB.Model(&user).Updates(UserBasic{Name: user.Name, PassWord: user.PassWord, Phone: user.Phone, Email: user.Email})
+	return utils.DB.Model(&user).Updates(UserBasic{Name: user.Name, PassWord: user.PassWord, Phone: user.Phone, Email: user.Email, Icon: user.Icon})
 }
 
 func FindUserById(id uint) UserBasic {

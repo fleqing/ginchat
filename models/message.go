@@ -154,7 +154,7 @@ func udpSendProc() {
 	con, err := net.DialUDP("udp", nil, &net.UDPAddr{
 		// TODO IP地址可能需要修改
 		IP:   net.IPv4(127, 0, 0, 1),
-		Port: 3001,
+		Port: viper.GetInt("port.udp"),
 	})
 	if err != nil {
 		fmt.Println("udp err ->>>>", err)
@@ -189,7 +189,7 @@ func udpSendProc() {
 func udpRecvProc() {
 	con, err := net.ListenUDP("udp", &net.UDPAddr{
 		IP:   net.IPv4zero,
-		Port: 3001,
+		Port: viper.GetInt("port.udp"),
 	})
 	if err != nil {
 		fmt.Println("udp err ->>>>", err)

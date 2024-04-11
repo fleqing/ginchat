@@ -124,6 +124,7 @@ func UpdateUser(c *gin.Context) {
 	user.PassWord = c.PostForm("password")
 	user.Phone = c.PostForm("phone")
 	user.Email = c.PostForm("email")
+	user.Icon = c.PostForm("icon")
 	_, err := govalidator.ValidateStruct(user)
 	if err != nil {
 		c.JSON(200, gin.H{
@@ -264,7 +265,15 @@ func CreateCommunity(c *gin.Context) {
 	ownerId, _ := strconv.Atoi(c.Request.FormValue("ownerId"))
 	community.Name = c.Request.FormValue("name")
 	community.OwnerId = uint(ownerId)
-	flag, msg := models.CreateCommunity(community)
+	community.Cate = c.Request.FormValue("cate")
+	community.Img = c.Request.FormValue("icon")
+	community.Desc = c.Request.FormValue("desc")
+	flag, msg := models.CreateCommunity(&community)
+	contact := models.Contact{}
+	contact.OwnerId = uint(ownerId)
+	contact.TargetId = community.ID
+	contact.Type = 2
+	utils.DB.Create(&contact)
 	if flag == 0 {
 		utils.RespOk(c.Writer, flag, msg)
 	} else {
