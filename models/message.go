@@ -102,6 +102,7 @@ func sendProc(node *Node) {
 		select {
 		case data := <-node.DataQueue:
 			fmt.Println("[ws] sendProc >>>> msg:", string(data))
+			// 将消息发送到 WebSocket 连接,前端会收到消息
 			err := node.Conn.WriteMessage(websocket.TextMessage, data)
 			if err != nil {
 				fmt.Println(err)

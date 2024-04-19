@@ -468,6 +468,7 @@
                 initwebsocket: function () {
                     var url = "ws://" + location.host + "/chat?userId=" + userId() + "&token=" + util.parseQuery("token");
                     this.webSocket = new WebSocket(url);
+                    console.log("websocket init")
                     //消息处理
                     this.webSocket.onmessage = function (evt) {
                         console.log("onmessage", evt.data)

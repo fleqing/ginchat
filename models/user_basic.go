@@ -25,9 +25,9 @@ type UserBasic struct {
 	ClientIp     string
 	ClientPort   string
 	Salt         string
-	LoginTime    time.Time
-	HearBeatTime time.Time
-	LoginOutTime time.Time
+	LoginTime    time.Time `gorm:"default:CURRENT_TIMESTAMP(3)"`
+	HearBeatTime time.Time `gorm:"default:CURRENT_TIMESTAMP(3)"`
+	LoginOutTime time.Time `gorm:"default:CURRENT_TIMESTAMP(3)"`
 	IsLogout     bool
 	DeviceInfo   string
 	Icon         string
