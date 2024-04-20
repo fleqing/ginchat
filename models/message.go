@@ -98,16 +98,13 @@ func Chat(writer http.ResponseWriter, request *http.Request) {
 
 // 从 node.DataQueue 中读取数据，并将数据作为WebSocket消息发送出去
 func sendProc(node *Node) {
-	for {
-		select {
-		case data := <-node.DataQueue:
-			fmt.Println("[ws] sendProc >>>> msg:", string(data))
-			// 将消息发送到 WebSocket 连接,前端会收到消息
-			err := node.Conn.WriteMessage(websocket.TextMessage, data)
-			if err != nil {
-				fmt.Println(err)
-				return
-			}
+	for data := range node.DataQueue {
+		fmt.Println("[ws] sendProc >>>> msg:", string(data))
+		// 将消息发送到 WebSocket 连接,前端会收到消息
+		err := node.Conn.WriteMessage(websocket.TextMessage, data)
+		if err != nil {
+			fmt.Println(err)
+			return
 		}
 	}
 	// for data := range node.DataQueue {
@@ -163,15 +160,12 @@ func udpSendProc() {
 	}
 	defer con.Close()
 	// fmt.Println("udp_time", time.Now())
-	for {
-		select {
-		case data := <-udpsendChan:
-			fmt.Println("udpSendProc      ", string(data))
-			_, err := con.Write(data)
-			if err != nil {
-				fmt.Println(err)
-				return
-			}
+	for data := range udpsendChan {
+		fmt.Println("udpSendProc      ", string(data))
+		_, err := con.Write(data)
+		if err != nil {
+			fmt.Println(err)
+			return
 		}
 	}
 	// for data := range udpsendChan {
@@ -285,8 +279,6 @@ func sendGroupMsg(targetId int64, msg []byte) {
 
 // 获取缓存里面的消息
 func RedisMsg(userIdA int64, userIdB int64, start int64, end int64, isRev bool) []string {
-	rwlocker.RLock()
-	rwlocker.RUnlock()
 	// Context 是用于在不同的 goroutine 之间传递 deadline、取消信号和其他请求范围的值的机制。
 	ctx := context.Background()
 	userIdStr := strconv.Itoa(int(userIdA))
